@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-
+import 'Model/Email.dart';
+import 'WorldTime.dart';
 void main() {
-  runApp(MyApp());
+  runApp(WorldTime());
 }
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: NinjaCard(),
+      home: WorldTime(),
     );
   }
 }
@@ -36,7 +37,11 @@ class NinjaCard extends StatefulWidget {
 
 class NinjaCardState extends State<NinjaCard> {
   int ninjaLevel = 0;
-
+  List<Email> lstEmail = [
+       new Email(email:'hoa.np@gmail.com',color: 'red'),
+       new Email(email:'nphoa7777@gmail.com',color: 'grey'),
+       new Email(email:'phuochoa7777@gmail.com',color: 'blue'),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,27 +110,61 @@ class NinjaCardState extends State<NinjaCard> {
               ) ,
             ),
             SizedBox(height: 30.0),
-            Row(
-              children: <Widget>[
-                Icon(
-                  Icons.email,
-                  color:Colors.grey[400] ,
-                ),
-                SizedBox(width: 10.0),
-                Text(
-                  'hoa.np7777@gmail.com',
-                  style:TextStyle(
-                    color:Colors.grey[400],
-                    fontSize: 18.0,
-                  ) ,
-                )
-              ],
-            )
+            Column(
+              children: lstEmail.map((email) =>
+                  EmailWidget(
+                      email: email,
+                      onDelete:(){
+                        setState(() {
+                          lstEmail.remove(email);
+                        });
+                      }
+                  )
+              ).toList(),
+            ),
           ],
         ) ,
       ),
     );
     throw UnimplementedError();
+  }
+}
+
+class EmailWidget extends StatelessWidget {
+  final Email email;
+  final Function onDelete;
+  const EmailWidget({
+    Key key,
+    this.email,
+    this.onDelete
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Icon(
+          Icons.email,
+          color:Colors.grey[400] ,
+        ),
+        SizedBox(width: 10.0),
+        Text(
+          '${email.email}',
+          style:TextStyle(
+            color:Colors.grey[400],
+            fontSize: 12.0,
+          ) ,
+        ),
+        FlatButton.icon(
+            onPressed: (){
+              onDelete();
+            },
+            color: Colors.cyan[300],
+            icon: Icon(Icons.delete),
+            label: Text('Delete')
+        )
+      ],
+    );
   }
 }
 
